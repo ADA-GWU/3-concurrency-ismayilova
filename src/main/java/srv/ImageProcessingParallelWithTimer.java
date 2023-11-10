@@ -13,23 +13,25 @@ import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
 
 public class ImageProcessingParallelWithTimer extends JFrame {
-    private int pixelSize = 100;
+    private int pixelSize = 100; // Adjust this value for different levels of pixelation
+    private String path ;
     private BufferedImage originalImage;
 
     private JLabel label;
-    private int numThreads = 2;// this one is ac
+    private int numThreads = 4;// this one is ac
     private int regionWidth;
     private int regionHeight;
     private int currentRegionX = 0;
     private int currentRegionY = 0;
 
-    public ImageProcessingParallelWithTimer() {
+    public ImageProcessingParallelWithTimer(String name, int pixelSize) {
         super("Parallel Pixelation with Timer Demo");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
-
+        this.pixelSize = pixelSize;
+        this.path  = String.format("src/main/resources/%s", name);
         try {
-            originalImage = ImageIO.read(new File("src/main/resources/city.jpg"));
+            originalImage = ImageIO.read(new File(path));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -147,8 +149,8 @@ public class ImageProcessingParallelWithTimer extends JFrame {
         g.dispose();
         return copy;
     }
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(() -> new ImageProcessingParallelWithTimer().setVisible(true));
-    }
+//    public static void main(String[] args) {
+//        SwingUtilities.invokeLater(() -> new ImageProcessingParallelWithTimer("city.jpg",100).setVisible(true));
+//    }
 }
 

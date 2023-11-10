@@ -13,20 +13,23 @@ import java.io.IOException;
 
 public class ImageProcessing extends JFrame {
     private int pixelSize = 100; // Adjust this value for different levels of pixelation
+    private String path ;
     private BufferedImage originalImage;
     private JLabel label;
     private int currentX = 0;
     private int currentY = 0;
 
-    public ImageProcessing() {
+    public ImageProcessing(String name , int pixelSize) {
         super("Pixelation Demo");
+        this.pixelSize = pixelSize;
+        this.path  = String.format("src/main/resources/%s", name);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 //        setLayout(new FlowLayout());
         setLayout(new BorderLayout());
 
 
         try {
-            originalImage = ImageIO.read(new File("src/main/resources/HA.jpeg")); // Replace with your image URL
+            originalImage = ImageIO.read(new File(path)); // Replace with your image URL
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -102,12 +105,12 @@ public class ImageProcessing extends JFrame {
             e.printStackTrace();
         }
     }
-    public static void main(String[] args) {
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                new ImageProcessing().setVisible(true);
-            }
-        });
-    }
+//    public static void main(String[] args) {
+//        SwingUtilities.invokeLater(new Runnable() {
+//            @Override
+//            public void run() {
+//                new ImageProcessing("HA.jpeg",100).setVisible(true);
+//            }
+//        });
+//    }
 }

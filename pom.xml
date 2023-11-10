@@ -21,13 +21,7 @@
 
 </dependencies>
 
-    <repositories>
-        <repository>
-            <id>opencv</id>
-            <name>OpenPnP Repository</name>
-            <url>https://repo1.maven.org/maven2/</url>
-        </repository>
-    </repositories>
+
 
 
 <build>
@@ -43,5 +37,6 @@
         </plugin>
     </plugins>
 </build>
+
 
 </project>

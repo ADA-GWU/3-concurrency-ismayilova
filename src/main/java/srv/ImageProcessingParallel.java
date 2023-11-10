@@ -29,7 +29,7 @@ public class ImageProcessingParallel extends JFrame {
         setLayout(new FlowLayout());
 
         try {
-            originalImage = ImageIO.read(new File("src/main/resources/HA.jpeg")); // Replace with your image path
+            originalImage = ImageIO.read(new File("src/main/resources/city.jpg")); // Replace with your image path
         } catch (IOException e) {
             e.printStackTrace();
         }
