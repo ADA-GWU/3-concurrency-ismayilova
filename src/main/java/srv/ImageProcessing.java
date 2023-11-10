@@ -12,7 +12,7 @@ import java.io.File;
 import java.io.IOException;
 
 public class ImageProcessing extends JFrame {
-    private int pixelSize = 10; // Adjust this value for different levels of pixelation
+    private int pixelSize = 100; // Adjust this value for different levels of pixelation
     private BufferedImage originalImage;
     private JLabel label;
     private int currentX = 0;
@@ -21,15 +21,22 @@ public class ImageProcessing extends JFrame {
     public ImageProcessing() {
         super("Pixelation Demo");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setLayout(new FlowLayout());
+//        setLayout(new FlowLayout());
+        setLayout(new BorderLayout());
+
 
         try {
-            originalImage = ImageIO.read(new File("src/main/resources/monalisa.jpg")); // Replace with your image URL
+            originalImage = ImageIO.read(new File("src/main/resources/city.jpg")); // Replace with your image URL
         } catch (IOException e) {
             e.printStackTrace();
         }
 
         label = new JLabel(new ImageIcon(originalImage));
+//        setContentPane(label);
+        JScrollPane scrollPane = new JScrollPane(label);
+        scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
+        scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
+
 
         JButton startButton = new JButton("Start Pixelation");
         startButton.addActionListener(new ActionListener() {
@@ -41,13 +48,17 @@ public class ImageProcessing extends JFrame {
 
         JPanel controlPanel = new JPanel();
         controlPanel.add(startButton);
-
-        getContentPane().setLayout(new BorderLayout());
-        getContentPane().add(label, BorderLayout.CENTER);
-        getContentPane().add(controlPanel, BorderLayout.SOUTH);
+        add(scrollPane, BorderLayout.CENTER);
+        add(controlPanel, BorderLayout.SOUTH);
 
         pack();
         setLocationRelativeTo(null);
+//        getContentPane().setLayout(new BorderLayout());
+//        getContentPane().add(label, BorderLayout.CENTER);
+//        getContentPane().add(controlPanel, BorderLayout.SOUTH);
+//
+//        pack();
+//        setLocationRelativeTo(null);
     }
 
     private void startPixelation() {
