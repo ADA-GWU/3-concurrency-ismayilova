@@ -26,13 +26,12 @@ public class ImageProcessing extends JFrame {
 
 
         try {
-            originalImage = ImageIO.read(new File("src/main/resources/city.jpg")); // Replace with your image URL
+            originalImage = ImageIO.read(new File("src/main/resources/HA.jpeg")); // Replace with your image URL
         } catch (IOException e) {
             e.printStackTrace();
         }
 
         label = new JLabel(new ImageIcon(originalImage));
-//        setContentPane(label);
         JScrollPane scrollPane = new JScrollPane(label);
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
@@ -45,20 +44,17 @@ public class ImageProcessing extends JFrame {
                 startPixelation();
             }
         });
-
+        JButton saveButton = new JButton("Save Result");
+        saveButton.addActionListener(e -> savePixelatedImage(originalImage));
         JPanel controlPanel = new JPanel();
         controlPanel.add(startButton);
+        controlPanel.add(saveButton);
         add(scrollPane, BorderLayout.CENTER);
         add(controlPanel, BorderLayout.SOUTH);
 
         pack();
         setLocationRelativeTo(null);
-//        getContentPane().setLayout(new BorderLayout());
-//        getContentPane().add(label, BorderLayout.CENTER);
-//        getContentPane().add(controlPanel, BorderLayout.SOUTH);
-//
-//        pack();
-//        setLocationRelativeTo(null);
+
     }
 
     private void startPixelation() {
@@ -97,7 +93,15 @@ public class ImageProcessing extends JFrame {
             currentY += pixelSize;
         }
     }
-
+    private void savePixelatedImage(BufferedImage imageToSave) {
+        try {
+            File output = new File("src/main/resources/result.jpg");
+            ImageIO.write(imageToSave, "jpg", output);
+            System.out.println("Pixelated image saved to: " + output.getAbsolutePath());
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
