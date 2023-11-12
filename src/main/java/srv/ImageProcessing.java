@@ -2,6 +2,8 @@ package srv;
 
 
 
+import util.ImageUtils;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
@@ -20,9 +22,13 @@ public class ImageProcessing extends JFrame {
     private int currentY = 0;
 
     public ImageProcessing(String name , int pixelSize) {
-        super("Pixelation Demo");
+        super("Pixelation");
+        System.out.println("======================");
         this.pixelSize = pixelSize;
         this.path  = String.format("src/main/resources/%s", name);
+        System.out.println(this.path);
+        System.out.println("======================");
+
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 //        setLayout(new FlowLayout());
         setLayout(new BorderLayout());
@@ -40,7 +46,7 @@ public class ImageProcessing extends JFrame {
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 
 
-        JButton startButton = new JButton("Start Pixelation");
+        JButton startButton = new JButton("Start");
         startButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -48,7 +54,7 @@ public class ImageProcessing extends JFrame {
             }
         });
         JButton saveButton = new JButton("Save Result");
-        saveButton.addActionListener(e -> savePixelatedImage(originalImage));
+        saveButton.addActionListener(e -> ImageUtils.savePixelatedImage(originalImage));
         JPanel controlPanel = new JPanel();
         controlPanel.add(startButton);
         controlPanel.add(saveButton);
@@ -61,7 +67,7 @@ public class ImageProcessing extends JFrame {
     }
 
     private void startPixelation() {
-        Timer timer = new Timer(50, new ActionListener() {
+        Timer timer = new Timer(100, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
                 pixelateNextRegion();
@@ -79,12 +85,14 @@ public class ImageProcessing extends JFrame {
     private void pixelateNextRegion() {
         int width = originalImage.getWidth();
         int height = originalImage.getHeight();
-        int rgb = originalImage.getRGB(currentX, currentY);
-
+//        int rgb = originalImage.getRGB(currentX, currentY);
+        int rgb = ImageUtils.calcAvrRGB( originalImage,currentX , currentY , pixelSize);
         for (int i = 0; i < pixelSize; i++) {
             for (int j = 0; j < pixelSize; j++) {
                 if (currentX + i < width && currentY + j < height) {
-                    originalImage.setRGB(currentX + i, currentY + j, rgb);
+
+                    originalImage.setRGB(currentX + i, currentY + j,rgb);
+
                 }
             }
         }
@@ -96,15 +104,7 @@ public class ImageProcessing extends JFrame {
             currentY += pixelSize;
         }
     }
-    private void savePixelatedImage(BufferedImage imageToSave) {
-        try {
-            File output = new File("src/main/resources/result.jpg");
-            ImageIO.write(imageToSave, "jpg", output);
-            System.out.println("Pixelated image saved to: " + output.getAbsolutePath());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+
 //    public static void main(String[] args) {
 //        SwingUtilities.invokeLater(new Runnable() {
 //            @Override

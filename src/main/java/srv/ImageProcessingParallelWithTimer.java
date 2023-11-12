@@ -1,5 +1,7 @@
 package srv;
 
+import util.ImageUtils;
+
 import javax.imageio.ImageIO;
 import javax.swing.*;
 import java.awt.*;
@@ -25,7 +27,7 @@ public class ImageProcessingParallelWithTimer extends JFrame {
     private int currentRegionY = 0;
 
     public ImageProcessingParallelWithTimer(String name, int pixelSize) {
-        super("Parallel Pixelation with Timer Demo");
+        super("Multi");
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setLayout(new BorderLayout());
         this.pixelSize = pixelSize;
@@ -41,10 +43,10 @@ public class ImageProcessingParallelWithTimer extends JFrame {
         scrollPane.setHorizontalScrollBarPolicy(JScrollPane.HORIZONTAL_SCROLLBAR_AS_NEEDED);
         scrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_AS_NEEDED);
 
-        JButton startButton = new JButton("Start Parallel Pixelation");
+        JButton startButton = new JButton("Start");
         startButton.addActionListener(e -> startParallelPixelation());
         JButton saveButton = new JButton("Save Result");
-        saveButton.addActionListener(e -> savePixelatedImage(originalImage));
+        saveButton.addActionListener(e -> ImageUtils.savePixelatedImage(originalImage));
 
         JPanel controlPanel = new JPanel();
         controlPanel.add(startButton);
@@ -60,18 +62,19 @@ public class ImageProcessingParallelWithTimer extends JFrame {
 
     private void startParallelPixelation() {
 
-        ScheduledExecutorService executorService = Executors.newScheduledThreadPool(numThreads*2);
+        ScheduledExecutorService executorService = Executors.newScheduledThreadPool(numThreads);
 
         int width = originalImage.getWidth();
         int height = originalImage.getHeight();
-        regionWidth = width / numThreads;
-        regionHeight = height / numThreads;
+        int divisor = 2;// numThreads/2;
+        regionWidth = width / divisor;
+        regionHeight = height / divisor;
 
-        for (int i = 0; i < numThreads; i++) {
+        for (int i = 0; i < divisor; i++) {
             int startX = i * regionWidth;
             int endX = (i + 1) * regionWidth;
 
-            for (int j = 0; j < numThreads; j++) {
+            for (int j = 0; j < divisor; j++) {
                 int startY = j * regionHeight;
                 int endY = (j + 1) * regionHeight;
 
@@ -82,26 +85,26 @@ public class ImageProcessingParallelWithTimer extends JFrame {
 //
 //
 //        executorService.schedule(() -> {
-//            executorService.shutdown();
-//            try {
-//                executorService.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
-//                savePixelatedImage(pixelatedImage);
-//            } catch (InterruptedException e) {
-//                e.printStackTrace();
-//            }
-//        }, numThreads * numThreads * 10, TimeUnit.MILLISECONDS);
+            executorService.shutdown();
+            try {
+                executorService.awaitTermination(Long.MAX_VALUE, TimeUnit.NANOSECONDS);
+
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+
 
     }
 
     private void pixelateRegion(int startX, int startY, int endX, int endY) {
-        Timer timer = new Timer(200, new ActionListener() {
+        Timer timer = new Timer(400, new ActionListener() {
             private int currentX = startX;
             private int currentY = startY;
 
             @Override
             public void actionPerformed(ActionEvent e) {
-                int rgb = originalImage.getRGB(currentX, currentY);
-
+//                int rgb = originalImage.getRGB(currentX, currentY);
+                int rgb = ImageUtils.calcAvrRGB( originalImage,currentX , currentY , pixelSize);
                 for (int i = 0; i < pixelSize; i++) {
                     for (int j = 0; j < pixelSize; j++) {
                         int x = currentX + i;
@@ -131,15 +134,7 @@ public class ImageProcessingParallelWithTimer extends JFrame {
     }
 
 
-    private void savePixelatedImage(BufferedImage imageToSave) {
-        try {
-            File output = new File("src/main/resources/result.jpg");
-            ImageIO.write(imageToSave, "jpg", output);
-            System.out.println("Pixelated image saved to: " + output.getAbsolutePath());
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-    }
+
     private BufferedImage copyImage(BufferedImage original) {
         int width = original.getWidth();
         int height = original.getHeight();

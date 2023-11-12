@@ -6,25 +6,39 @@
 
 
 
-Task:
-
-Your application will take three arguments from the command line: file name, square size and the processing mode (Example: yourprogram somefile.jpg 5 S):
-
-file name: the name of the graphic file of jpg format (no size constraints)
-square size: the side of the square for the averaging
-processing mode: 'S' - single threaded and 'M' - multi threaded
-Your task is to show the image, and start performing the following procedure:
-
-from left to right, top to bottom find the average color for the (square size) x (square size) boxes and set the color of the whole square to this average color. You need to show the result by progress, not at once.
-In the multi-processing mode, you need to perform the same procedure in parallel threads. The number of threads shall be selected according to the computer's CPU cores.
-There result shall be saved in a result.jpg file. The result of the processing shall look like the attached example.
-
-The evaluation will consider the following criteria:
-
-readability
-coding style
-documentation (README file is ok)
-portability (shall run on any pc with the provided instructions)
 
 
-https://stackoverflow.com/questions/76097556/homebrew-on-mac-not-using-the-edited-opencv-rb-file-via-brew-edit-opencv-during
+# Image Processing
+
+This maven project contains two image processing codes. One will pixelate the given image in single thread another in multiple threads.
+I have used available javax libraries. For sequential pixelation  the main code is wrapped in Timer class. In Single threaded version the image will start to processing immediatly. In multithreaded version before image pixelation I divide image in 4 equal images by saving the starting and ending postions of each subimage. Then for each subimage I trigger a task in separate thread.
+In M mode (multithread) it visibale how all cores are getting involved.
+
+![Image Alt Text](img/before.png)
+
+![Image Alt Text](img/multi.png)
+
+## Used technologies
+- Javax
+- Pair
+- ThreadPool (executor services)
+
+## Running Instructions
+1. Maven 
+2. Install all the dependencies (*pom.xml*)
+3. run this code in terminal.
+Make sure to pass three input parameters. 
+Image name, pixel size  and mode  (S/M)
+
+
+```
+mvn clean install exec:java -Dexec.args="monalisa.jpg 20 S"
+```
+
+
+
+
+
+
+
+

@@ -2,6 +2,7 @@
 //import main.java.util.ThreadColors;
 
 import srv.ImageProcessing;
+import srv.ImageProcessingParallel;
 import srv.ImageProcessingParallelWithTimer;
 
 import javax.swing.*;
@@ -28,7 +29,7 @@ public class Main {
 
                 break;
             case 'M':
-                SwingUtilities.invokeLater(() -> new ImageProcessingParallelWithTimer(param1,param2).setVisible(true));
+                SwingUtilities.invokeLater(() -> new ImageProcessingParallel(param1,param2).setVisible(true));
 
                 System.out.println("Pattern matched: 'M'");
                 break;
